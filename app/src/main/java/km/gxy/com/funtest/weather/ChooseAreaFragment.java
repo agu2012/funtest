@@ -32,6 +32,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
+ * 选择地区
+ *
  * @author xiayi.gu@2020/8/8
  * @Project FunWeather
  */
