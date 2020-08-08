@@ -5,7 +5,7 @@
     <version value="1"></version>
     <list>
         <mapping class="km.gxy.com.funtest.db.City"/>
-        <mapping class="km.gxy.com.funtest.db.Country"/>
+        <mapping class="km.gxy.com.funtest.db.County"/>
         <mapping class="km.gxy.com.funtest.db.Province"/>
     </list>
 </litepal>

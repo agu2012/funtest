@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import km.gxy.com.funtest.db.City;
-import km.gxy.com.funtest.db.Country;
+import km.gxy.com.funtest.db.County;
 import km.gxy.com.funtest.db.Province;
 
 /**
@@ -75,7 +75,7 @@ public class Utility {
             JSONArray allCountres = new JSONArray(response);
             for (int i = 0; i < allCountres.length(); i++) {
                 JSONObject o = allCountres.getJSONObject(i);
-                Country country = new Country();
+                County country = new County();
                 country.setCountyName(o.getString("name"));
                 country.setWeatherId(o.getString("weather_id"));
                 country.setCityId(cityId);

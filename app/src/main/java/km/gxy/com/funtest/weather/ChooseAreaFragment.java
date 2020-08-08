@@ -23,7 +23,7 @@ import km.gxy.com.funtest.BaseFragment;
 import km.gxy.com.funtest.R;
 import km.gxy.com.funtest.common.CommonUrls;
 import km.gxy.com.funtest.db.City;
-import km.gxy.com.funtest.db.Country;
+import km.gxy.com.funtest.db.County;
 import km.gxy.com.funtest.db.Province;
 import km.gxy.com.funtest.util.HttpUtil;
 import km.gxy.com.funtest.util.Utility;
@@ -48,11 +48,11 @@ public class ChooseAreaFragment extends BaseFragment {
 
     private List<Province> provinces;
     private List<City> cities;
-    private List<Country> countries;
+    private List<County> countries;
 
     private Province selectedProvince;
     private City selectCity;
-    private Country selectedCountry;
+    private County selectedCountry;
 
     private int curLevel;
 
@@ -143,10 +143,10 @@ public class ChooseAreaFragment extends BaseFragment {
         tvTitle.setText(selectCity.getCityName());
         switchBackBtn(true);
         countries = DataSupport.where("cityId=?",
-                String.valueOf(selectCity.getId())).find(Country.class);
+                String.valueOf(selectCity.getId())).find(County.class);
         if (countries.size() > 0) {
             dataList.clear();
-            for (Country c : countries) {
+            for (County c : countries) {
                 dataList.add(c.getCountyName());
             }
             notifyAdapterChanged();
