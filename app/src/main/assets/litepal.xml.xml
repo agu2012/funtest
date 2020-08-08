@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @Project FunWeather -->
+<litepal>
+    <dbname value="fun_weather"></dbname>
+    <version value="1"></version>
+    <list>
+        <mapping class="km.gxy.com.funtest.db.City"/>
+        <mapping class="km.gxy.com.funtest.db.Country"/>
+        <mapping class="km.gxy.com.funtest.db.Province"/>
+    </list>
+</litepal>
