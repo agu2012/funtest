@@ -10,31 +10,36 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <ScrollView
-        android:id="@+id/weather_lay"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/weather_lay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:fitsSystemWindows="true">
-            <!--fitsSystemWindows //为系统状态栏留出空间-->
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
-            <include layout="@layout/fw_title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical">
+                <!--fitsSystemWindows //为系统状态栏留出空间-->
 
-            <include layout="@layout/fw_now" />
+                <include layout="@layout/fw_title" />
 
-            <include layout="@layout/fw_forecast" />
+                <include layout="@layout/fw_now" />
 
-            <include layout="@layout/fw_aqi" />
+                <include layout="@layout/fw_forecast" />
 
-            <include layout="@layout/fw_suggestion" />
+                <include layout="@layout/fw_aqi" />
 
-        </LinearLayout>
-    </ScrollView>
+                <include layout="@layout/fw_suggestion" />
 
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

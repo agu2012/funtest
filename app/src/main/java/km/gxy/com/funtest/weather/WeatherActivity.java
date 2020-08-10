@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ public class WeatherActivity extends BaseActivity {
     private static final String SHARED_PREF_BING = "bing_pic";
     private static final String SHARED_PREF_WEATHER = "weather";
 
+    private SwipeRefreshLayout mSwipeRefreshLay;
     private ScrollView mWeatherLay;
 
     private ImageView mBing;
@@ -50,6 +53,8 @@ public class WeatherActivity extends BaseActivity {
     private TextView mCarWash;
     private TextView mSport;
 
+    private String mWeatherId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,17 +69,34 @@ public class WeatherActivity extends BaseActivity {
         setContentView(R.layout.fw_activity_weather);
 
         initWidgets();
+        initWidgetStates();
+    }
+
+    private void initWidgetStates() {
+        mSwipeRefreshLay.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLay.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestWeather(mWeatherId);
+            }
+        });
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         initBingPic(prefs);
-        String weatherId = getIntent().getStringExtra(INTENT_PARAM1);
-        if (weatherId == null) {// 直接打开页面
+
+        mWeatherId = getIntent().getStringExtra(INTENT_PARAM1);
+        if (TextUtils.isEmpty(mWeatherId)) {// 直接打开页面
             String weatherStr = prefs.getString("weather", null);
+            if (TextUtils.isEmpty(weatherStr)) {
+                showToast("天气信息获取异常，请重新再试！");
+                finish();
+            }
             Weather weather = Utility.handleWeatherResponse(weatherStr);
+            mWeatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         } else {//地区选择跳转
             mWeatherLay.setVisibility(View.INVISIBLE);
-            requestWeather(weatherId);
+            requestWeather(mWeatherId);
         }
     }
 
@@ -87,13 +109,17 @@ public class WeatherActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("网络请求失败（#获取天气信息-1）！");
+                        showErrorToast(1);
+                        stopRefreshing();
                     }
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if (response == null || !response.isSuccessful()) {
+                    showErrorToast(2);
+                }
                 final String responseText = response.body().string();
                 if (responseText != null) {
                     final Weather weather = Utility.handleWeatherResponse(responseText);
@@ -102,17 +128,27 @@ public class WeatherActivity extends BaseActivity {
                         public void run() {
                             if (weather != null && "ok".equals(weather.status)) {
                                 saveLocalWeather(responseText);
+                                mWeatherId = weather.basic.weatherId;
                                 showWeatherInfo(weather);
                             } else {
-                                showToast("网络请求失败（#获取天气信息-2）！");
+                                showErrorToast(3);
                             }
+                            stopRefreshing();
                         }
                     });
                 } else {
-                    showToast("网络请求失败（#获取天气信息-3）！");
+                    stopRefreshing();
                 }
             }
         });
+    }
+
+    private void showErrorToast(int flag) {
+        showToast("网络请求失败！: #获取天气信息#" + flag);
+    }
+
+    private void stopRefreshing() {
+        mSwipeRefreshLay.setRefreshing(false);
     }
 
     private void showWeatherInfo(Weather weather) {
@@ -165,6 +201,7 @@ public class WeatherActivity extends BaseActivity {
 
     private void initWidgets() {
         mWeatherLay = findViewById(R.id.weather_lay);
+        mSwipeRefreshLay = findViewById(R.id.swipe_refresh);
         mBing = findViewById(R.id.iv_bing);
         mTitleCity = findViewById(R.id.tv_title_city);
         mTitleUpdateTime = findViewById(R.id.tv_title_update_time);
