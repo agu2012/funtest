@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -38,9 +41,11 @@ public class WeatherActivity extends BaseActivity {
     private static final String SHARED_PREF_WEATHER = "weather";
 
     private SwipeRefreshLayout mSwipeRefreshLay;
+    private DrawerLayout mDrawerLay;
     private ScrollView mWeatherLay;
 
     private ImageView mBing;
+    private Button mBtnNav;
 
     private TextView mTitleCity;
     private TextView mTitleUpdateTime;
@@ -78,6 +83,13 @@ public class WeatherActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 requestWeather(mWeatherId);
+            }
+        });
+
+        mBtnNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLay.openDrawer(GravityCompat.START);
             }
         });
 
@@ -202,6 +214,8 @@ public class WeatherActivity extends BaseActivity {
     private void initWidgets() {
         mWeatherLay = findViewById(R.id.weather_lay);
         mSwipeRefreshLay = findViewById(R.id.swipe_refresh);
+        mDrawerLay = findViewById(R.id.drawer_lay);
+        mBtnNav = findViewById(R.id.btn_nav);
         mBing = findViewById(R.id.iv_bing);
         mTitleCity = findViewById(R.id.tv_title_city);
         mTitleUpdateTime = findViewById(R.id.tv_title_update_time);
@@ -270,6 +284,15 @@ public class WeatherActivity extends BaseActivity {
 
     private void loadImage(ImageView iv, String url) {
         Glide.with(this).load(url).into(iv);
+    }
+
+    public void resetState(String weatherId){
+        mWeatherId = weatherId;
+
+        mDrawerLay.closeDrawers();
+        stopRefreshing();
+
+        requestWeather(mWeatherId);
     }
 
     public static void intentWithParam1(Context context, String weatherId) {

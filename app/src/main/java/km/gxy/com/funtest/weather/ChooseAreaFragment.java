@@ -25,6 +25,7 @@ import km.gxy.com.funtest.common.CommonUrls;
 import km.gxy.com.funtest.db.City;
 import km.gxy.com.funtest.db.County;
 import km.gxy.com.funtest.db.Province;
+import km.gxy.com.funtest.gson.Weather;
 import km.gxy.com.funtest.util.HttpUtil;
 import km.gxy.com.funtest.util.Utility;
 import okhttp3.Call;
@@ -88,8 +89,13 @@ public class ChooseAreaFragment extends BaseFragment {
                     selectedCounty = countries.get(position);
                     showToast(selectedCounty.getCountyName());
                     String weatherId = selectedCounty.getWeatherId();
-                    WeatherActivity.intentWithParam1(getActivity(), weatherId);
-                    getActivity().finish();
+                    if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.resetState(weatherId);
+                    } else {
+                        WeatherActivity.intentWithParam1(getActivity(), weatherId);
+                        getActivity().finish();
+                    }
                 }
             }
         });
