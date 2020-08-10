@@ -1,5 +1,7 @@
 package km.gxy.com.funtest.util;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,11 +9,27 @@ import org.json.JSONObject;
 import km.gxy.com.funtest.db.City;
 import km.gxy.com.funtest.db.County;
 import km.gxy.com.funtest.db.Province;
+import km.gxy.com.funtest.gson.Weather;
 
 /**
  * @author xiayi.gu@2020/8/8
  */
 public class Utility {
+
+    public static Weather handleWeatherResponse(String response) {
+
+        try {
+            JSONObject o = new JSONObject(response);
+            JSONArray array = o.getJSONArray("HeWeather");
+            String weatherContent = array.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent, Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
 
     /**
      * 【网络】解析Response

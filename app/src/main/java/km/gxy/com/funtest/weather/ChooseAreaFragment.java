@@ -54,7 +54,7 @@ public class ChooseAreaFragment extends BaseFragment {
 
     private Province selectedProvince;
     private City selectCity;
-    private County selectedCountry;
+    private County selectedCounty;
 
     private int curLevel;
 
@@ -84,9 +84,12 @@ public class ChooseAreaFragment extends BaseFragment {
                 } else if (curLevel == LEVEL_CITY) {
                     selectCity = cities.get(position);
                     queryCounties();
-                }else{
-                    selectedCountry = countries.get(position);
-                    showToast(selectedCountry.getCountyName());
+                } else {
+                    selectedCounty = countries.get(position);
+                    showToast(selectedCounty.getCountyName());
+                    String weatherId = selectedCounty.getWeatherId();
+                    WeatherActivity.intentWithParam1(getActivity(), weatherId);
+                    getActivity().finish();
                 }
             }
         });
