@@ -3,6 +3,8 @@ package km.gxy.com.funtest.weather;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -51,18 +53,26 @@ public class WeatherActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= 21) {// 让背景图与状态栏融为一体
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);// 活动布局显示在状态栏上
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
         setContentView(R.layout.fw_activity_weather);
 
         initWidgets();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         initBingPic(prefs);
-        String weatherStr = prefs.getString("weather", null);
-        if (weatherStr != null) {
+        String weatherId = getIntent().getStringExtra(INTENT_PARAM1);
+        if (weatherId == null) {// 直接打开页面
+            String weatherStr = prefs.getString("weather", null);
             Weather weather = Utility.handleWeatherResponse(weatherStr);
             showWeatherInfo(weather);
-        } else {
-            String weatherId = getIntent().getStringExtra(INTENT_PARAM1);
+        } else {//地区选择跳转
             mWeatherLay.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
@@ -186,7 +196,7 @@ public class WeatherActivity extends BaseActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response == null || !response.isSuccessful()){
+                if (response == null || !response.isSuccessful()) {
                     showToast("网络请求失败：获取背景");
                     return;
                 }
