@@ -36,6 +36,32 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+/**
+ * 添趣Weather2.0
+ *
+ * 1.0 基本天气功能
+ *      * 天气详情页
+ *      * 城市选择
+ *
+ * 2.0 实现和风天气api，获取真实数据
+ *      * 网络框架Retrofit
+ *      * Glide框架搭建
+ *      * 真实api替换
+ *
+ * 3.0 优化主界面
+ *      * @标题@主界面（+）
+ *          - 未设置：default情况，点击进入选择地区
+ *          - 已设置：展示当前天气信息，点击进入天气页面
+ *      * 增加15天天气信息图表展示界面（+）
+ *      * 选择地区界面增加【搜索】功能（+）
+ *          - 搜索地区
+ *          - 热门地区
+ *          - 收藏多个地区【增|删】
+ *      * 天气详情页滑动切换其他地区（+）
+ *      * 天气动画背景（+）
+ *
+ */
+
 public class WeatherActivity extends BaseActivity {
     private static final String INTENT_PARAM1 = "weather_id";
     public static final String SHARED_PREF_BING = "bing_pic";
