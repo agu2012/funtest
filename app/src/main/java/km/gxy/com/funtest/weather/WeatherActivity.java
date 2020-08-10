@@ -29,6 +29,7 @@ import km.gxy.com.funtest.common.CommonUrls;
 import km.gxy.com.funtest.gson.AQI;
 import km.gxy.com.funtest.gson.Forecast;
 import km.gxy.com.funtest.gson.Weather;
+import km.gxy.com.funtest.service.WeatherAutoUpateService;
 import km.gxy.com.funtest.util.HttpUtil;
 import km.gxy.com.funtest.util.Utility;
 import okhttp3.Call;
@@ -37,8 +38,8 @@ import okhttp3.Response;
 
 public class WeatherActivity extends BaseActivity {
     private static final String INTENT_PARAM1 = "weather_id";
-    private static final String SHARED_PREF_BING = "bing_pic";
-    private static final String SHARED_PREF_WEATHER = "weather";
+    public static final String SHARED_PREF_BING = "bing_pic";
+    public static final String SHARED_PREF_WEATHER = "weather";
 
     private SwipeRefreshLayout mSwipeRefreshLay;
     private DrawerLayout mDrawerLay;
@@ -209,6 +210,9 @@ public class WeatherActivity extends BaseActivity {
             mSport.setText(sport);
         }
         mWeatherLay.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, WeatherAutoUpateService.class);
+        startService(intent);
     }
 
     private void initWidgets() {
